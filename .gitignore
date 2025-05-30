@@ -2,6 +2,10 @@
 /auth/dist
 /auth/node_modules
 
+# compiled output for product service
+/product/dist
+/product/node_modules
+
 # Logs
 /auth/logs
 /auth/*.log
@@ -11,12 +15,23 @@
 /auth/yarn-error.log*
 /auth/lerna-debug.log*
 
+/product/logs
+/product/*.log
+/product/npm-debug.log*
+/product/pnpm-debug.log*
+/product/yarn-debug.log*
+/product/yarn-error.log*
+/product/lerna-debug.log*
+
 # OS
 .DS_Store
 
 # Tests
 /auth/coverage
 /auth/.nyc_output
+
+/product/coverage
+/product/.nyc_output
 
 # IDEs and editors
 /.idea
