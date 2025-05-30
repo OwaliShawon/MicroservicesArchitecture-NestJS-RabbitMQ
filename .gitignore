@@ -6,6 +6,10 @@
 /product/dist
 /product/node_modules
 
+# Local environment variables
+/auth/.env
+/product/.env
+
 # Logs
 /auth/logs
 /auth/*.log
