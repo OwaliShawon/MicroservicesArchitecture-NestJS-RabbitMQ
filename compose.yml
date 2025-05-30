@@ -1,0 +1,117 @@
+version: '3.8'
+
+services:
+  # Messaging
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Auth Service and Database
+  auth-mongo:
+    image: mongo:latest
+    container_name: auth-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpass
+      MONGO_INITDB_DATABASE: auth-db
+    volumes:
+      - auth_mongo_data:/data/db
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  auth-service:
+    build: ./auth
+    container_name: auth-service
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.example-auth
+    depends_on:
+      auth-mongo:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - microservices-network
+
+  # Product Service and Database
+  product-mongo:
+    image: mongo:latest
+    container_name: product-mongo
+    restart: always
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpass
+      MONGO_INITDB_DATABASE: product-db
+    volumes:
+      - product_mongo_data:/data/db
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  product-service:
+    build: ./product
+    container_name: product-service
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env.example-product
+    depends_on:
+      product-mongo:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - microservices-network
+
+  # Mongo Express (for Auth DB)
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: rootpass
+      ME_CONFIG_MONGODB_URL: mongodb://root:rootpass@auth-mongo:27017/
+      ME_CONFIG_BASICAUTH: false
+    networks:
+      - microservices-network
+
+volumes:
+  rabbitmq_data:
+  auth_mongo_data:
+  product_mongo_data:
+
+networks:
+  microservices-network:
+    driver: bridge
