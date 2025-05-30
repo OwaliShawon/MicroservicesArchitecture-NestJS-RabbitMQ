@@ -1,0 +1,35 @@
+# compiled output for auth service
+/auth/dist
+/auth/node_modules
+
+# Logs
+/auth/logs
+/auth/*.log
+/auth/npm-debug.log*
+/auth/pnpm-debug.log*
+/auth/yarn-debug.log*
+/auth/yarn-error.log*
+/auth/lerna-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/auth/coverage
+/auth/.nyc_output
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
