@@ -35,6 +35,9 @@ export class AuthService {
         ...registerDto,
         password: registerDto.password,
       });
+
+      // Publish user.created event
+      console.log('Publishing user.created event for user:', user);
       this.client
         .emit('user.created', {
           userId: user._id,
