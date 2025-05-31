@@ -16,6 +16,21 @@
    git clone <repo-url>
    cd MicroservicesArchitecture-NestJS-RabbitMQ
    ```
+2. **Run with Docker Compose**
+   `docker compose up --build`
+
+3. **To stop the Services**
+   `docker compose down`
+
+## Notes
+
+- All inter-service communication (token validation, user events) is handled via RabbitMQ.
+- For development, use `npm run start:dev` inside each service for hot-reloading.
+- Adjust .env files as needed for your environment.
+
+---
+
+# Demonstration
 
 A demonstration of a microservices architecture using **NestJS** and **RabbitMQ** for inter-service communication between an **Auth Service** and a **Product Service**.
 
