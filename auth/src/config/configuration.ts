@@ -1,6 +1,8 @@
 export default () => ({
   port: parseInt(process.env.PORT, 10) || 3000,
   database: {
-    url: process.env.DATABASE_URL || 'mongodb://localhost:27017/auth-db',
+    uri:
+      process.env.DATABASE_URI ||
+      'mongodb://root:rootpass@auth-mongo:27017/auth-db?authSource=admin',
   },
 });
